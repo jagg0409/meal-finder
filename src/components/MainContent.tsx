@@ -13,7 +13,7 @@ function MainContent({ meals, loading, openRecipe }: Props) {
 
   return (
     <SimpleGrid columns={[2, null, 3]} spacing={20}>
-      {loading && skeletons.map((skeleton) => <SkeletonCard></SkeletonCard>)}
+      {loading && skeletons.map(() => <SkeletonCard></SkeletonCard>)}
       {meals.map((m) => (
         <MealCard openRecipe={() => openRecipe(m)} meal={m} key={m.idMeal} />
       ))}
