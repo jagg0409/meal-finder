@@ -1,5 +1,6 @@
 import {
   Button,
+  Container,
   Modal,
   ModalContent,
   ModalFooter,
@@ -18,10 +19,10 @@ type Props = {
 
 function RecipieModal({ isOpen, onClose, loading, data }: Props) {
   return (
-    <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+    <Container>
+      <Modal isOpen={isOpen} onClose={onClose} size="lg">
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent maxWidth="35%">
           {loading ? (
             <RecipeModalSkeleton />
           ) : (
@@ -35,7 +36,7 @@ function RecipieModal({ isOpen, onClose, loading, data }: Props) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </Container>
   );
 }
 

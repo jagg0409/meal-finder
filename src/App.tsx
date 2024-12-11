@@ -3,7 +3,7 @@ import "./App.css";
 import Header from "./components/Header";
 import SideNav from "./components/SideNav";
 import MainContent from "./components/MainContent";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Category, Meal, MealDetails, searchForm } from "./types";
 import useHttpData from "./hooks/useHttpData";
 import axios from "axios";
@@ -16,7 +16,7 @@ const makeMealUrl = (category: Category) =>
   `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category.strCategory}`;
 
 const defaultCat = {
-  strCategory: "Beef",
+  strCategory: "Breakfast",
 };
 
 function App() {
@@ -32,7 +32,23 @@ function App() {
     data: dataMeal,
     setData: setMeals,
     setLoading: setLoadingMeal,
-  } = useHttpData<Meal>(makeMealUrl(defaultCat));
+  } = useHttpData<Meal>(makeMealUrl(selectedCategory));
+
+  useEffect(() => {
+    setLoadingMeal(true);
+    const fetchMeals = async () => {
+      try {
+        const response = await axios.get(makeMealUrl(selectedCategory));
+        setMeals(response.data.meals);
+      } catch (error) {
+        console.error("Error fetching meals:", error);
+      } finally {
+        setLoadingMeal(false);
+      }
+    };
+
+    fetchMeals();
+  }, [selectedCategory, setMeals, setLoadingMeal]);
 
   const searchAPI = (searchFrom: searchForm) => {
     const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchFrom.search}`;
@@ -42,6 +58,7 @@ function App() {
       .then(({ data }) => setMeals(data.meals))
       .finally(() => setLoadingMeal(false));
   };
+
   const {
     fetch,
     loading: loadingMealDetails,
@@ -54,6 +71,8 @@ function App() {
       `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${meal.idMeal}`
     );
   };
+
+  console.log("categoria seleccionadas", selectedCategory.strCategory);
   return (
     <>
       <Grid
